@@ -1,7 +1,8 @@
-/* style.css - النسخة المحسنة V3 */
+/* style.css - النسخة المحسنة V4 */
 
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
 
+/* 1. المتغيرات والألوان */
 :root {
     --primary-color: #6C5CE7;
     --secondary-color: #A29BFE;
@@ -14,6 +15,7 @@
     --border-radius: 12px;
 }
 
+/* 2. الأساسيات والخطوط */
 body {
     font-family: 'Cairo', sans-serif;
     background-color: var(--background-color);
@@ -36,7 +38,7 @@ h1, h2, h3 {
     padding: 20px;
 }
 
-/* Header */
+/* 3. الهيدر */
 .header {
     background-color: var(--card-background);
     padding: 15px 20px;
@@ -62,7 +64,15 @@ h1, h2, h3 {
     color: var(--accent-color);
 }
 
-/* Sidebar */
+/* زر الهامبرغر للموبايل */
+.hamburger {
+    display: none;
+    font-size: 26px;
+    cursor: pointer;
+    color: var(--primary-color);
+}
+
+/* 4. الشريط الجانبي */
 .sidebar {
     width: 250px;
     background-color: var(--card-background);
@@ -74,6 +84,7 @@ h1, h2, h3 {
     right: 0;
     overflow-y: auto;
     transition: all 0.3s ease;
+    z-index: 999;
 }
 
 .sidebar a {
@@ -92,7 +103,7 @@ h1, h2, h3 {
     border-right: 5px solid var(--primary-color);
 }
 
-/* Main content */
+/* 5. المحتوى الرئيسي */
 .main-content {
     margin-right: 270px;
     padding: 20px;
@@ -100,7 +111,7 @@ h1, h2, h3 {
     transition: all 0.3s ease;
 }
 
-/* Cards */
+/* 6. البطاقات */
 .card {
     background-color: var(--card-background);
     padding: 25px;
@@ -117,7 +128,7 @@ h1, h2, h3 {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
 }
 
-/* Buttons */
+/* 7. الأزرار */
 .btn-primary {
     background-color: var(--primary-color);
     color: white;
@@ -127,6 +138,9 @@ h1, h2, h3 {
     cursor: pointer;
     font-size: 16px;
     font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
@@ -135,7 +149,7 @@ h1, h2, h3 {
     transform: scale(1.02);
 }
 
-/* Forms */
+/* 8. عناصر الإدخال */
 input, textarea, select {
     width: 95%;
     padding: 12px;
@@ -152,7 +166,7 @@ input:focus, textarea:focus {
     outline: none;
 }
 
-/* Animations */
+/* 9. الانيميشن */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
@@ -169,37 +183,41 @@ input:focus, textarea:focus {
     100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(214, 48, 49, 0); }
 }
 
-/* Responsive */
+/* 10. التجاوب */
 
 /* Tablets */
 @media (max-width: 992px) {
     .sidebar { width: 200px; }
     .main-content { margin-right: 220px; }
-    .grid-container { grid-template-columns: 1fr; }
 }
 
-/* Mobile */
+/* Mobile (phones) */
 @media (max-width: 768px) {
     .header { position: static; padding: 10px; }
+    .hamburger { display: block; }
+
     .sidebar {
-        width: 100%;
-        height: auto;
-        position: static;
-        padding: 0;
-        box-shadow: none;
-        border-bottom: 1px solid #EEE;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        width: 250px;
+        padding: 20px 0;
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
     }
-    .sidebar a { padding: 10px 15px; justify-content: center; text-align: center; }
+
+    .sidebar.active { right: 0; }
+
     .main-content { margin-right: 0; padding: 15px; }
-    .grid-container { grid-template-columns: 1fr; }
+    .sidebar a { padding: 10px 15px; justify-content: center; text-align: center; }
+
+    .btn-primary { font-size: 14px; padding: 10px 15px; }
+    input, textarea, select { width: 100%; padding: 10px; font-size: 13px; }
 }
 
 /* Very small devices */
 @media (max-width: 480px) {
     .header { font-size: 14px; }
     .logo { font-size: 20px; }
-    .btn-primary { padding: 10px 20px; font-size: 14px; }
-    input, textarea, select { width: 100%; padding: 10px; font-size: 13px; }
 }
 
 /* Large screens */
