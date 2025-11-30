@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul Sync - تمرين الأكل الواعي</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .mindful-timer-display {
+            font-size: 4rem; 
+            font-weight: bold;
+            color: var(--accent-color); /* لون الأكل الواعي */
+            margin-bottom: 20px;
+        }
+        .step-instruction {
+            padding: 15px;
+            background-color: #E0F7FA; /* خلفية خفيفة */
+            border-right: 5px solid var(--accent-color);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .step-instruction h4 {
+            margin: 0;
+            margin-right: 15px;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        .mindful-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 700;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <a href="home.html" class="logo">Soul Sync</a>
+    <div>تمرين الأكل الواعي</div>
+</div>
+<div class="sidebar">
+    <a href="home.html">الرئيسية</a>
+    <a href="exercises.html" class="active">التمارين</a>
+    <!-- ... Rest of sidebar links ... -->
+</div>
+
+<div class="main-content">
+    <h2>&#127869; تمرين الأكل الواعي (Mindful Eating)</h2>
+    <div class="card">
+        <h3>الهدف: التركيز على الحواس وإشارات الشبع</h3>
+        <p>يساعد هذا التمرين في بناء علاقة صحية مع الطعام من خلال إبطاء الوتيرة وتقدير التجربة بدلاً من الأكل العاطفي السريع.</p>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <div id="mindfulTimerDisplay" class="mindful-timer-display">05:00</div>
+            
+            <button id="startMindfulTimer" class="mindful-btn">ابدأ تمرين 5 دقائق</button>
+        </div>
+        
+        <h3 style="margin-top: 30px; color: var(--primary-color);">التعليمات خطوة بخطوة أثناء التمرين:</h3>
+
+        <div class="step-instruction">
+            <h4>1. الإعداد</h4>
+            <p>أغلق التلفزيون والهاتف. اجلس في هدوء. انظر إلى طعامك وكأنه أول مرة تراه.</p>
+        </div>
+        
+        <div class="step-instruction">
+            <h4>2. البصر والشم</h4>
+            <p>لاحظ الألوان والأشكال والملمس. استنشق رائحة الطعام بعمق قبل تناول أول لقمة.</p>
+        </div>
+        
+        <div class="step-instruction">
+            <h4>3. الملمس والتذوق</h4>
+            <p>تناول لقمة صغيرة. لاحظ كيف تشعر بها في فمك. ركّز على نكهة واحدة في كل مرة. امضغ ببطء (حاول المضغ 20 مرة).</p>
+        </div>
+        
+        <div class="step-instruction">
+            <h4>4. الانتباه للإشارات</h4>
+            <p>اسأل نفسك: "هل أنا جائع حقاً الآن؟". انتبه لشعور الشبع الخفيف وتوقف قبل الامتلاء التام.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    const mindfulTimerDisplay = document.getElementById('mindfulTimerDisplay');
+    const startMindfulTimerButton = document.getElementById('startMindfulTimer');
+    const DURATION = 300; // 5 دقائق = 300 ثانية
+    
+    let remainingTime = DURATION;
+    let timerInterval;
+    let isRunning = false;
+
+    /**
+     * تحديث عرض المؤقت (MM:SS)
+     */
+    function updateDisplay(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        mindfulTimerDisplay.textContent = `${minutes < 10 ? '0' : ''}${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    /**
+     * تشغيل المؤقت
+     */
+    function startTimer() {
+        if (isRunning) return;
+
+        isRunning = true;
+        startMindfulTimerButton.textContent = 'المؤقت قيد التشغيل... (إيقاف مؤقت)';
+        startMindfulTimerButton.style.backgroundColor = 'var(--secondary-color)'; 
+        
+        timerInterval = setInterval(() => {
+            remainingTime--;
+            updateDisplay(remainingTime);
+
+            if (remainingTime <= 0) {
+                clearInterval(timerInterval);
+                isRunning = false;
+                mindfulTimerDisplay.textContent = '05:00';
+                startMindfulTimerButton.textContent = 'أحسنت! أكملت تمرين الأكل الواعي.';
+                startMindfulTimerButton.style.backgroundColor = 'var(--success-color)';
+                
+                alert('تهانينا، لقد أكملت 5 دقائق من الأكل الواعي. كيف تغير شعورك تجاه الطعام؟');
+            }
+        }, 1000);
+    }
+    
+    /**
+     * إيقاف أو متابعة المؤقت
+     */
+    function toggleTimer() {
+        if (isRunning) {
+            clearInterval(timerInterval);
+            isRunning = false;
+            startMindfulTimerButton.textContent = 'متابعة التمرين';
+            startMindfulTimerButton.style.backgroundColor = 'var(--danger-color)';
+        } else {
+            // إذا كان الوقت 0، ابدأ من جديد
+            if (remainingTime <= 0) {
+                 remainingTime = DURATION;
+                 updateDisplay(remainingTime);
+                 startMindfulTimerButton.style.backgroundColor = 'var(--accent-color)';
+            }
+            startTimer();
+        }
+    }
+
+    startMindfulTimerButton.addEventListener('click', toggleTimer);
+
+    // الإعداد الأولي
+    updateDisplay(DURATION);
+
+</script>
+
+</body>
+</html>

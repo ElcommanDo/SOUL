@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul Sync - المجتمع الآمن</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .chat-box {
+            height: 400px;
+            border: 1px solid #EEE;
+            padding: 15px;
+            overflow-y: scroll;
+            margin-bottom: 15px;
+            background-color: #F9F9F9;
+        }
+        .message-incoming {
+            background-color: #E6E6FA;
+            padding: 10px;
+            border-radius: 15px 15px 15px 0;
+            margin-bottom: 10px;
+            width: 70%;
+        }
+        .urgent-support {
+            text-align: center;
+            padding: 10px;
+            background-color: #FFE0B2;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            color: #E65100;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <a href="home.html" class="logo">Soul Sync</a>
+    <div>مرحباً، Admin User!</div>
+</div>
+<div class="sidebar">
+    <a href="home.html" class="active">الرئيسية</a>
+    <a href="checkin.html">التقييم اليومي</a>
+    <a href="ai_analysis.html">تحليل الذكاء الاصطناعي</a>
+    <a href="ai_chat.html" >محادثة AI Coach</a> 
+    <a href="exercises.html">التمارين</a>
+    <a href="community.html">المجتمع</a>
+    <a href="routine.html">الجدول اليومي</a>
+    <a href="meal_plan.html">جدول الأكل الصحي</a>
+    <a href="workout.html">تمارين الجسم</a>
+    <a href="graphs.html">الرسوم البيانية</a>
+    <a href="profile.html">الحساب</a>
+    <a href="emergency.html" style="color: var(--danger-color); font-weight: bold;">مساعدة الطوارئ</a>
+</div>
+
+<div class="main-content">
+    <h2>&#128104;&#8205;&#129309;&#8205;&#128104; مساحة الدعم الآمنة (بدون أسماء)</h2>
+
+    <div class="urgent-support">
+        <p><strong>شخص 3:</strong> أحتاج دعم الآن. أتمنى كلمات لطيفة.</p>
+    </div>
+    
+    <div class="chat-box">
+        <div class="message-incoming">
+            <small>شخص 1</small>
+            <p>كن قوياً، نحن جميعاً نمر بأوقات صعبة، وستمر هذه الفترة أيضاً!</p>
+        </div>
+        <div class="message-incoming" style="direction: ltr; margin-left: 30%;">
+            <small>شخص 5</small>
+            <p style="direction: rtl;">تذكر أنك تستحق الحب والرعاية.</p>
+        </div>
+    </div>
+    
+    <textarea placeholder="اكتب رسالتك... (تطبق فلاتر الكلمات المؤذية)" rows="3" style="width: 98%; padding: 10px; border-radius: 5px; border: 1px solid #CCC;"></textarea>
+    <button class="btn-primary" style="margin-top: 10px;">إضافة بوست</button>
+    <button class="btn-primary" style="background-color: var(--danger-color); margin-top: 10px;">أحتاج دعم</button>
+</div>
+
+</body>
+</html>

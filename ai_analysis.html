@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul Sync - تحليل الذكاء الاصطناعي</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* التأكد من وجود التنسيقات الضرورية من style.css */
+        :root {
+            --primary-color: #6C5CE7; 
+            --secondary-color: #A29BFE;
+            --accent-color: #00CEC9;
+            --success-color: #00B894;
+            --danger-color: #D63031;
+            --border-radius: 12px;
+        }
+        .status-card {
+            border-right: 5px solid;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background-color: var(--card-background);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            opacity: 0; /* للتحضير لتأثير الظهور الديناميكي */
+            animation: fadeIn 0.5s forwards; 
+        }
+        .status-low { border-right-color: #FFC312; }
+        .status-moderate { border-right-color: #FF5252; }
+        .status-safe { border-right-color: var(--success-color); }
+        .status-high { border-right-color: var(--danger-color); } /* خطر شديد */
+
+        /* تأكد من تعريف هذا الانيميشن في style.css أو هنا */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <a href="home.html" class="logo">Soul Sync</a>
+    <div>مرحباً، Admin User!</div>
+</div>
+
+<div class="sidebar">
+    <a href="home.html" class="active">الرئيسية</a>
+    <a href="checkin.html">التقييم اليومي</a>
+    <a href="ai_analysis.html">تحليل الذكاء الاصطناعي</a>
+    <a href="ai_chat.html" >محادثة AI Coach</a> 
+    <a href="exercises.html">التمارين</a>
+    <a href="community.html">المجتمع</a>
+    <a href="routine.html">الجدول اليومي</a>
+    <a href="meal_plan.html">جدول الأكل الصحي</a>
+    <a href="workout.html">تمارين الجسم</a>
+    <a href="graphs.html">الرسوم البيانية</a>
+    <a href="profile.html">الحساب</a>
+    <a href="emergency.html" style="color: var(--danger-color); font-weight: bold;">مساعدة الطوارئ</a>
+</div>
+
+<div class="main-content">
+    <h2>&#129302; تحليل الذكاء الاصطناعي لحالتك اليوم</h2>
+    
+    <div class="card">
+        <h3>نتائج تقييم اليوم (بناءً على إدخالك)</h3>
+        
+        <!-- مكان التحليل الديناميكي -->
+        <div id="analysisResults">
+            <!-- سيتم ملء هذا القسم بواسطة JavaScript -->
+            <div class="status-card">
+                <p style="text-align: center;">جاري تحميل البيانات...</p>
+            </div>
+        </div>
+
+    </div>
+    
+    <div class="card">
+        <h3>نصيحة Soul Sync اليوم</h3>
+        <blockquote id="aiTip" style="border-right: 4px solid var(--primary-color); padding-right: 15px; margin: 10px 0; font-style: italic;">
+            "تحكم في اللحظة الحالية. إذا شعرت بالرغبة في الأكل العاطفي، تذكر قاعدة الـ 10 دقائق تأجيل."
+        </blockquote>
+    </div>
+</div>
+
+<script>
+    const STORAGE_KEY = 'soulSyncCheckins';
+    const analysisResults = document.getElementById('analysisResults');
+    const aiTipElement = document.getElementById('aiTip');
+
+    // الوظيفة الرئيسية لتحميل وعرض البيانات
+    function loadAndAnalyzeData() {
+        const storedData = localStorage.getItem(STORAGE_KEY);
+        if (!storedData) {
+            analysisResults.innerHTML = '<div class="status-card status-safe"><p>لم يتم تسجيل أي تقييمات اليوم بعد. يرجى البدء من صفحة التقييم اليومي.</p></div>';
+            return;
+        }
+
+        const checkins = JSON.parse(storedData);
+        if (checkins.length === 0) {
+            analysisResults.innerHTML = '<div class="status-card status-safe"><p>لم يتم تسجيل أي تقييمات اليوم بعد.</p></div>';
+            return;
+        }
+
+        // الحصول على آخر تقييم
+        const latestCheckin = checkins[checkins.length - 1];
+        
+        // --- 1. تحليل المزاج والطاقة والنوم ---
+        const mood = parseInt(latestCheckin.mood);
+        const energy = parseInt(latestCheckin.energy);
+        let moodAnalysis = '';
+        let moodClass = 'status-safe';
+        let moodEmoji = '&#128522;'; // سعيد/طبيعي
+
+        if (mood <= 2 || energy <= 2) {
+            moodAnalysis = `مزاجك منخفض (${mood}/5) وطاقتك قليلة (${energy}/5). هذا يتطلب اهتماماً إضافياً.`;
+            moodClass = 'status-high';
+            moodEmoji = '&#128557;'; // حزين
+        } else if (mood <= 3 || energy <= 3) {
+            moodAnalysis = `مزاجك وطاقتك متوسطة (${mood}/5). ربما تحتاج لبعض النشاط أو الاسترخاء.`;
+            moodClass = 'status-low';
+            moodEmoji = '&#128532;'; // متعب
+        } else {
+            moodAnalysis = `مزاجك ممتاز (${mood}/5) وطاقتك عالية (${energy}/5). يوم جيد للمضي قدماً!`;
+        }
+
+        // --- 2. تحليل خطر الأكل (Binge Risk) ---
+        const appetite = latestCheckin.appetite;
+        const bingeHappened = latestCheckin.binge === 'yes';
+        let riskAnalysis = '';
+        let riskClass = 'status-safe';
+        let riskPercentage = 0;
+        let recommendation = 'استمر في روتينك المخطط له، واحتفل بهذا اليوم الجيد.';
+        let exerciseLink = 'exercises.html';
+        let exerciseText = 'تمرين الامتنان';
+
+        if (bingeHappened) {
+            riskPercentage = 100;
+            riskAnalysis = `**تحذير: تم تسجيل نوبة أكل اليوم.** تحتاج إلى دعم فوري وتوجيه.`;
+            riskClass = 'status-high';
+            recommendation = `بما أن نوبة الأكل قد حدثت، ننصحك بتنفيذ **تمرين تقبُّل المشاعر** الآن بدلاً من تأنيب الذات.`;
+            exerciseText = 'تمرين تقبُّل المشاعر';
+            exerciseLink = 'exercise_binge.html';
+        } else if (appetite === 'high' && mood <= 3) {
+            riskPercentage = 60;
+            riskAnalysis = `**توقع خطر مرتفع (60%):** الشهية الزائدة مع المزاج المنخفض يزيد من احتمالية نوبة الأكل العاطفي.`;
+            riskClass = 'status-moderate';
+            recommendation = `ننصح بتنفيذ **تمرين إيقاف نوبة الشره** على الفور لكسر الحلقة.`;
+            exerciseText = 'تمرين إيقاف نوبة الشره';
+            exerciseLink = 'exercise_binge.html';
+        } else if (appetite === 'low' && mood <= 3) {
+            riskPercentage = 40;
+            riskAnalysis = `**توقع خطر متوسط (40%):** الشهية القليلة والمزاج المنخفض قد يشيران إلى فقدان الشهية.`;
+            riskClass = 'status-low';
+            recommendation = `ننصح بتنفيذ **تمرين الأكل الواعي (Mindful Eating)** لدعم العودة إلى نمط أكل منتظم.`;
+            exerciseText = 'تمرين الأكل الواعي';
+            exerciseLink = 'exercise_mindful.html';
+        }
+
+        // --- 3. بناء تقرير HTML ---
+        let htmlContent = '';
+        
+        // 1. بطاقة المزاج والطاقة
+        htmlContent += `
+            <div class="status-card ${moodClass}">
+                <p><strong>${moodEmoji} المزاج والطاقة:</strong> ${moodAnalysis}</p>
+            </div>
+        `;
+        
+        // 2. بطاقة خطر الأكل
+        if (riskPercentage > 0) {
+            htmlContent += `
+                <div class="status-card ${riskClass}">
+                    <p><strong>&#9888; توقع خطر نوبة الأكل:</strong> هناك **احتمال ${riskPercentage}%**.</p>
+                    ${latestCheckin.thoughts ? `<p style="font-size: 14px; color: #777;">*أفكارك السلبية المسجلة: <em>"${latestCheckin.thoughts}"</em></p>` : ''}
+                </div>
+            `;
+        }
+
+        // 3. بطاقة التوجيه والتمارين
+        htmlContent += `
+            <div class="status-card status-safe" style="border-right-color: var(--accent-color);">
+                <p><strong>&#128073; توجيه وتمرين مقترح:</strong> ${recommendation}</p>
+                <a href="${exerciseLink}" class="btn-primary" style="background-color: var(--accent-color); margin-top: 10px;">ابدأ ${exerciseText} الآن</a>
+            </div>
+        `;
+
+        // عرض النتائج في الصفحة
+        analysisResults.innerHTML = htmlContent;
+        
+        // تحديث نصيحة AI اليوم (بناءً على المزاج المنخفض كمثال)
+        if (mood <= 3) {
+            aiTipElement.innerHTML = '"قد يكون اليوم صعباً، تذكر أن الأيام الصعبة لا تعني حياة صعبة. **خذ استراحة تنفسية، واعتبر هذا إنجازاً**."';
+        }
+    }
+
+    // تشغيل وظيفة التحليل عند تحميل الصفحة
+    window.onload = loadAndAnalyzeData;
+</script>
+
+</body>
+</html>

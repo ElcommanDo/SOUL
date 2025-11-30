@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>تمرين التنفّس 4-7-8</title>
+    <style>
+        :root{
+            --primary-color: #6C5CE7;
+            --secondary-color:#A29BFE;
+            --accent-color:#00CEC9;
+            --success-color:#00B894;
+            --danger-color:#D63031;
+            --border-radius:12px;
+        }
+        body{font-family: "Segoe UI", Tahoma, Arial; padding:20px; background:#f7f7fb;}
+        .timer-display{font-size:4rem; font-weight:700; color:var(--primary-color); margin-bottom:16px; min-height:80px; text-align:center;}
+        .instruction-box{background:var(--secondary-color); color:#fff; padding:16px; border-radius:var(--border-radius); font-size:1.2rem; min-height:64px; display:flex; align-items:center; justify-content:center; text-align:center; transition:transform .2s, background-color .3s;}
+        .breathing-cycle{margin-top:16px; padding:12px; border-radius:var(--border-radius); font-weight:700; color:#555; text-align:center; border:1px solid #eee;}
+        button{cursor:pointer; border:0; padding:10px 18px; border-radius:10px; color:#fff; font-size:1rem;}
+        .btn-danger{background:var(--danger-color)}
+        .btn-accent{background:var(--accent-color)}
+        .btn-primary{background:var(--primary-color)}
+        /* مراحل */
+        .inhale{ background-color:#BBDEFB; color:var(--primary-color); transform:scale(1.03); }
+        .hold{ background-color:#FFECB3; color:#E65100; transform:scale(1); }
+        .exhale{ background-color:#CFD8DC; color:#455A64; transform:scale(.98); }
+        .status-safe{ background:var(--success-color); color:#fff; }
+    </style>
+</head>
+<body>
+    <div style="max-width:720px;margin:0 auto;">
+        <h2 style="text-align:center">😊 تمرين التنفس العميق (4-7-8)</h2>
+
+        <div style="background:#fff;padding:20px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06);">
+            <p>التعليمات: تمرين 4-7-8 لعدد <span id="totalCyclesLabel">4</span> دورات. (شهيق 4 - حجز 7 - زفير 8)</p>
+
+            <div style="text-align:center;margin-top:18px;">
+                <div id="timerDisplay" class="timer-display">1:16</div>
+                <div id="instructionBox" class="instruction-box">اضغط ابدأ للبدء</div>
+
+                <div style="margin-top:14px;">
+                    <button id="startButton" class="btn-primary">ابدأ التمرين</button>
+                </div>
+
+                <div id="cycleDisplay" class="breathing-cycle" style="margin-top:12px;">الدورة: 0 من 4</div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // عناصر
+    const startButton = document.getElementById('startButton');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const instructionBox = document.getElementById('instructionBox');
+    const cycleDisplay = document.getElementById('cycleDisplay');
+    const totalCyclesLabel = document.getElementById('totalCyclesLabel');
+
+    // إعدادات التمرين (بالثواني)
+    const INHALE_DURATION = 4;
+    const HOLD_DURATION = 7;
+    const EXHALE_DURATION = 8;
+    const CYCLE_LENGTH = INHALE_DURATION + HOLD_DURATION + EXHALE_DURATION; // 19
+    const TOTAL_CYCLES = 4;
+    const TOTAL_DURATION = CYCLE_LENGTH * TOTAL_CYCLES; // 76
+
+    totalCyclesLabel.textContent = TOTAL_CYCLES;
+
+    // حالة
+    let elapsedSeconds = 0; // ثواني انقضت منذ البداية
+    let intervalId = null;
+    let isRunning = false;
+
+    // تحويل ثواني إلى صيغة م:ss
+    function formatTime(totalSeconds){
+        if (totalSeconds < 0) totalSeconds = 0;
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
+
+    // حدِّث عرض المؤقت (يعرض الوقت المتبقي)
+    function updateTimerDisplay(remainingSeconds){
+        timerDisplay.textContent = formatTime(remainingSeconds);
+    }
+
+    // حدِّد المرحلة الحالية (بناءً على elapsedSeconds) وحدِّث الواجهة
+    function updatePhase(){
+        if (elapsedSeconds >= TOTAL_DURATION) {
+            finishExercise();
+            return;
+        }
+
+        const timeInCycle = elapsedSeconds % CYCLE_LENGTH;
+        const currentCycleIndex = Math.floor(elapsedSeconds / CYCLE_LENGTH);
+        const currentCycleNumber = currentCycleIndex + 1;
+        cycleDisplay.textContent = `الدورة: ${currentCycleNumber} من ${TOTAL_CYCLES}`;
+
+        let phaseText = '';
+        let phaseClass = '';
+        let phaseDuration = 0;
+        let timeInPhase = 0;
+
+        if (timeInCycle < INHALE_DURATION) {
+            phaseText = `خذ نفساً (شهيق)`;
+            phaseClass = 'inhale';
+            phaseDuration = INHALE_DURATION;
+            timeInPhase = timeInCycle;
+        } else if (timeInCycle < INHALE_DURATION + HOLD_DURATION) {
+            phaseText = `احبس (كتم)`;
+            phaseClass = 'hold';
+            phaseDuration = HOLD_DURATION;
+            timeInPhase = timeInCycle - INHALE_DURATION;
+        } else {
+            phaseText = `أخرج الهواء (زفير)`;
+            phaseClass = 'exhale';
+            phaseDuration = EXHALE_DURATION;
+            timeInPhase = timeInCycle - (INHALE_DURATION + HOLD_DURATION);
+        }
+
+        const remainingInPhase = phaseDuration - timeInPhase;
+        // نغيّر الأصناف (classes) على صندوق التعليمات للأثر البصري
+        instructionBox.className = 'instruction-box ' + phaseClass;
+        instructionBox.textContent = `${phaseText} — ${remainingInPhase} ثانية`;
+    }
+
+    // بدء المؤقت
+    function startExercise(){
+        if (isRunning) return;
+        isRunning = true;
+        startButton.textContent = 'إيقاف مؤقت';
+        startButton.className = 'btn-danger';
+
+        // تحديث مبدئي
+        updatePhase();
+        updateTimerDisplay(TOTAL_DURATION - elapsedSeconds);
+
+        intervalId = setInterval(() => {
+            elapsedSeconds++;
+            const remaining = TOTAL_DURATION - elapsedSeconds;
+            updateTimerDisplay(remaining);
+            updatePhase();
+
+            if (remaining <= 0) {
+                // سيتم التعامل داخل updatePhase/finishExercise
+                clearInterval(intervalId);
+                intervalId = null;
+            }
+        }, 1000);
+    }
+
+    // إيقاف مؤقت (pause)
+    function pauseExercise(){
+        if (!isRunning) return;
+        isRunning = false;
+        clearInterval(intervalId);
+        intervalId = null;
+        startButton.textContent = 'متابعة';
+        startButton.className = 'btn-accent';
+        instructionBox.className = 'instruction-box';
+        instructionBox.textContent = 'تم الإيقاف المؤقت — اضغط متابعة للاستئناف';
+    }
+
+    // عند إنهاء التمرين بنجاح
+    function finishExercise(){
+        clearInterval(intervalId);
+        intervalId = null;
+        isRunning = false;
+        elapsedSeconds = 0; // إعادة تعيين لبدء تمرين جديد
+        updateTimerDisplay(0);
+        instructionBox.className = 'instruction-box status-safe';
+        instructionBox.textContent = 'أحسنت! لقد أكملت التمرين 🎉';
+        startButton.textContent = 'أعد التمرين';
+        startButton.className = 'btn-primary';
+        cycleDisplay.textContent = `الدورة: ${TOTAL_CYCLES} من ${TOTAL_CYCLES}`;
+    }
+
+    // التعامل مع نقر الزر (نستخدم حالة isRunning وليس مقارنة النص)
+    startButton.addEventListener('click', () => {
+        if (!isRunning) {
+            // إذا كنا متوقفين ونص الزر "أعد التمرين" نعيد تعيين elapsedSeconds أيضاً
+            if (startButton.textContent === 'أعد التمرين') {
+                elapsedSeconds = 0;
+            }
+            startExercise();
+        } else {
+            // إذا كان يعمل
+            pauseExercise();
+        }
+    });
+
+    // إعداد أولي للعرض
+    updateTimerDisplay(TOTAL_DURATION);
+    cycleDisplay.textContent = `الدورة: 0 من ${TOTAL_CYCLES}`;
+</script>
+</body>
+</html>

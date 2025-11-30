@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soul Sync - AI Coach Offline</title>
+<style>
+body {
+    font-family: "Tajawal", sans-serif;
+    background-color: #f0f0f5;
+    margin: 0;
+    padding: 0;
+}
+.main-content {
+    padding: 20px;
+    margin-right: 200px;
+}
+.chat-container {
+    height: 500px;
+    border: 1px solid #CCC;
+    padding: 15px;
+    overflow-y: auto;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    background-color: #F9F9F9;
+}
+.ai-message-bubble {
+    background-color: #E6E6FA;
+    padding: 10px;
+    border-radius: 15px 15px 15px 0;
+    margin-bottom: 10px;
+    max-width: 80%;
+    float: right;
+    clear: both;
+}
+.user-message-bubble {
+    background-color: #6C5CE7;
+    color: white;
+    padding: 10px;
+    border-radius: 15px 15px 0 15px;
+    margin-bottom: 10px;
+    max-width: 80%;
+    float: left;
+    clear: both;
+}
+.typing-indicator {
+    background-color: #F0F0F0;
+    color: #555;
+    padding: 8px 12px;
+    border-radius: 15px;
+    width: fit-content;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+    float: right;
+    clear: both;
+    animation: pulse-dot 1s infinite;
+}
+@keyframes pulse-dot {
+    0% {opacity: 0.5;}
+    50% {opacity: 1;}
+    100% {opacity: 0.5;}
+}
+textarea {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #CCC;
+    resize: none;
+}
+button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #6C5CE7;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+#inputArea {
+    display: flex;
+    gap: 10px;
+}
+</style>
+</head>
+<body>
+
+<div class="main-content">
+    <h2>🤖 فضفضة مع المدرب الذكي</h2>
+    <div id="chatContainer" class="chat-container">
+        <div class="ai-message-bubble">
+            أهلاً بك! أنا مدربك الذكي Soul Sync Coach. يمكنك الفضفضة معي وسأقدم لك الدعم المناسب.
+        </div>
+    </div>
+
+    <div id="inputArea">
+        <textarea id="userInput" rows="2" placeholder="اكتب رسالتك هنا..."></textarea>
+        <button id="sendButton">إرسال</button>
+    </div>
+</div>
+
+<script>
+// ------------ AI logic --------------
+const chatContainer = document.getElementById('chatContainer');
+const userInput = document.getElementById('userInput');
+const sendButton = document.getElementById('sendButton');
+
+function displayMessage(text, sender) {
+    const div = document.createElement('div');
+    div.className = sender === 'user' ? 'user-message-bubble' : 'ai-message-bubble';
+    div.innerHTML = text;
+    chatContainer.appendChild(div);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function showTypingIndicator() {
+    const div = document.createElement('div');
+    div.className = 'typing-indicator';
+    div.id = 'typingIndicator';
+    div.innerText = 'المدرب الذكي يكتب...';
+    chatContainer.appendChild(div);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+    return div;
+}
+
+function hideTypingIndicator(indicator) {
+    if (indicator) indicator.remove();
+}
+
+// ---------- AI response logic ----------
+function getAIResponse(userMessage) {
+    const msg = userMessage.toLowerCase();
+    const responses = [];
+
+    // الحزن والاكتئاب
+    if (msg.includes('حزين') || msg.includes('اكتئاب') || msg.includes('بكاء') || msg.includes('مش قادر')) {
+        responses.push(
+            'أتفهم شعورك، هذا صعب جداً. حاول أن تكتب ما بداخلك، حتى لو جملة واحدة.',
+            'أشعر بما تمر به. أحياناً مشاركة مشاعرك تجعلها أخف.',
+            'خذ نفساً عميقاً، وأخبرني ما أكثر شيء يقلقك الآن؟'
+        );
+    }
+    // القلق والتوتر
+    else if (msg.includes('قلق') || msg.includes('توتر') || msg.includes('خوف')) {
+        responses.push(
+            'القلق شعور طبيعي، حاول أن تأخذ نفساً عميقاً وتكتب مخاوفك.',
+            'دعنا نركز على تهدئة جهازك العصبي، جرب التنفس 4-7-8.',
+            'هل يمكنك تحديد مصدر قلقك؟ الحديث عنه يساعد كثيراً.'
+        );
+    }
+    // الملل أو الفراغ
+    else if (msg.includes('ملل') || msg.includes('فراغ') || msg.includes('مش عارف')) {
+        responses.push(
+            'الملل شعور طبيعي، دعنا نحاول القيام بشيء صغير اليوم.',
+            'ربما مراجعة جدولك اليومي يساعدك على النشاط.',
+            'هل تريد أن أقترح تمرين ممتع لتنشيط ذهنك؟'
+        );
+    }
+    // الأكل أو الشره
+    else if (msg.includes('أكل') && (msg.includes('شره') || msg.includes('نوبة') || msg.includes('اكلت'))) {
+        responses.push(
+            'حسناً، لا تقلق، المهم هو الخطوة القادمة. هل يمكنك شرب ماء الآن؟',
+            'تذكر أن كل يوم فرصة جديدة، لنبدأ بالخطوة التالية.',
+            'أشعر بما تشعر به، حاول أن تكتب مشاعرك عن الأكل الآن.'
+        );
+    }
+    // رد عام
+    else {
+        responses.push(
+            'شكراً لمشاركتك. أرجو أن توضح أكثر حتى أتمكن من مساعدتك.',
+            'أنا أصغي إليك، استمر في الفضفضة، كل شيء هنا آمن.',
+            'ماذا تشعر الآن؟ أخبرني أكثر عن يومك.'
+        );
+    }
+
+    // اختيار رد عشوائي
+    const reply = responses[Math.floor(Math.random() * responses.length)];
+    return reply;
+}
+
+// ---------- handle sending ----------
+function handleUserMessage() {
+    const msg = userInput.value.trim();
+    if (msg === '') return;
+
+    displayMessage(msg, 'user');
+    userInput.value = '';
+
+    const indicator = showTypingIndicator();
+
+    setTimeout(() => {
+        hideTypingIndicator(indicator);
+        const aiReply = getAIResponse(msg);
+        displayMessage(aiReply, 'ai');
+    }, 1500 + Math.random() * 1000);
+}
+
+sendButton.addEventListener('click', handleUserMessage);
+
+userInput.addEventListener('keypress', function(e){
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleUserMessage();
+    }
+});
+
+</script>
+</body>
+</html>

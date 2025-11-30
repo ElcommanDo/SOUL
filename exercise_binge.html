@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul Sync - تمرين إيقاف نوبة الشره</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .binge-timer-display {
+            font-size: 4rem; 
+            font-weight: bold;
+            color: var(--danger-color); /* لون أحمر للتنبيه */
+            margin-bottom: 20px;
+        }
+        .step-instruction {
+            padding: 15px;
+            background-color: #FEEAEB; /* خلفية خفيفة */
+            border-right: 5px solid var(--danger-color);
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .binge-btn {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 700;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <a href="home.html" class="logo">Soul Sync</a>
+    <div>تمرين إيقاف نوبة الشره</div>
+</div>
+<div class="sidebar">
+    <a href="home.html">الرئيسية</a>
+    <a href="exercises.html" class="active">التمارين</a>
+    <!-- ... Rest of sidebar links ... -->
+</div>
+
+<div class="main-content">
+    <h2>&#127869; تمرين إيقاف نوبة الشره</h2>
+    <div class="card">
+        <h3>الهدف: تأجيل الرغبة لمدة 10 دقائق</h3>
+        <p>هذا التمرين يساعد على إعطاء فرصة لدماغك ليتجاوز الرغبة العاطفية. إذا نجحت في التأجيل، غالباً ستتلاشى النوبة.</p>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <div id="bingeTimerDisplay" class="binge-timer-display">10:00</div>
+            
+            <button id="startBingeTimer" class="binge-btn">ابدأ تأجيل الـ 10 دقائق</button>
+        </div>
+        
+        <h3 style="margin-top: 30px; color: var(--primary-color);">الخطوات المقترحة أثناء التأجيل:</h3>
+
+        <div class="step-instruction">
+            <h4>1. اترك المكان (الخطوة الأهم)</h4>
+            <p>اخرج من المطبخ أو من أمام الطعام فوراً. اذهب لغرفة أخرى، أو اخرج للمشي دقيقتين في البلكونة.</p>
+        </div>
+        
+        <div class="step-instruction">
+            <h4>2. التشتيت الحسي</h4>
+            <p>اشرب كوب ماء بارد جداً. أو استمع لأغنية صاخبة. أو حتى فرّش أسنانك بقوة. هذه الأفعال تُعيد تركيز دماغك.</p>
+        </div>
+        
+        <div class="step-instruction">
+            <h4>3. تواصل مع الدعم</h4>
+            <p>أرسل رسالة فورية في **صفحة المجتمع** بكلمة "أحتاج دعم". أو راسل شخصاً تثق به. لا تكن وحيداً في هذه اللحظة.</p>
+            <a href="community.html" class="btn-primary" style="background-color: var(--secondary-color); margin-top: 10px;">انتقل للمجتمع</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const bingeTimerDisplay = document.getElementById('bingeTimerDisplay');
+    const startBingeTimerButton = document.getElementById('startBingeTimer');
+    const DURATION = 600; // 10 دقائق = 600 ثانية
+    
+    let remainingTime = DURATION;
+    let timerInterval;
+    let isRunning = false;
+
+    /**
+     * تحديث عرض المؤقت (MM:SS)
+     */
+    function updateDisplay(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        bingeTimerDisplay.textContent = `${minutes < 10 ? '0' : ''}${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    /**
+     * تشغيل المؤقت
+     */
+    function startTimer() {
+        if (isRunning) return;
+
+        isRunning = true;
+        startBingeTimerButton.textContent = 'المؤقت قيد التشغيل... (إيقاف مؤقت)';
+        startBingeTimerButton.style.backgroundColor = '#FF7675'; // لون فاتح للدلالة على التشغيل
+        
+        timerInterval = setInterval(() => {
+            remainingTime--;
+            updateDisplay(remainingTime);
+
+            if (remainingTime <= 0) {
+                clearInterval(timerInterval);
+                isRunning = false;
+                bingeTimerDisplay.textContent = '10:00';
+                startBingeTimerButton.textContent = 'أحسنت! نجحت في التأجيل.';
+                startBingeTimerButton.style.backgroundColor = 'var(--success-color)';
+                
+                // توجيه المستخدم لتقييم حالته بعد التأجيل
+                alert('لقد نجحت في تأجيل النوبة لمدة 10 دقائق! قم بتقييم ما إذا كانت الرغبة لا تزال قوية.');
+                
+                // يمكن التوجيه لصفحة Checkin لتقييم الوضع
+                // window.location.href = 'checkin.html';
+            }
+        }, 1000);
+    }
+    
+    /**
+     * إيقاف أو متابعة المؤقت
+     */
+    function toggleTimer() {
+        if (isRunning) {
+            clearInterval(timerInterval);
+            isRunning = false;
+            startBingeTimerButton.textContent = 'متابعة التأجيل';
+            startBingeTimerButton.style.backgroundColor = 'var(--danger-color)';
+        } else {
+            // إذا كان الوقت 0، ابدأ من جديد
+            if (remainingTime === 0) {
+                 remainingTime = DURATION;
+                 updateDisplay(remainingTime);
+            }
+            startTimer();
+        }
+    }
+
+    startBingeTimerButton.addEventListener('click', toggleTimer);
+
+    // الإعداد الأولي
+    updateDisplay(DURATION);
+
+</script>
+
+</body>
+</html>

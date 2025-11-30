@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul Sync - الدخول</title>
+    <link rel="stylesheet" href="style.css"> 
+    <style>
+        .auth-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .auth-tabs button {
+            flex-grow: 1;
+            padding: 10px;
+            border: none;
+            background: #EEE;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .auth-tabs button.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        input[type="text"], input[type="password"], input[type="number"], input[type="email"] {
+            width: 95%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #CCC;
+            border-radius: 5px;
+        }
+        .checkbox-group label {
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="auth-container">
+    <h2 style="text-align: center; color: var(--primary-color);">Soul Sync</h2>
+
+    <div class="auth-tabs">
+        <button class="active">تسجيل الدخول</button>
+        <button>تسجيل جديد</button>
+    </div>
+
+    <form action="home.html" method="GET">
+        <h3>تسجيل الدخول</h3>
+        <input type="email" placeholder="الإيميل" value="admin@soulsync.com" required>
+        <input type="password" placeholder="كلمة المرور" value="admin" required>
+        <button type="submit" class="btn-primary" style="width: 100%;">تسجيل الدخول</button>
+    </form>
+
+    <div style="margin-top: 30px; border-top: 1px solid #CCC; padding-top: 20px; display: none;">
+        <h3>إنشاء حساب جديد</h3>
+        <input type="text" placeholder="الاسم (اختياري)">
+        <input type="number" placeholder="السن" required>
+        <div style="margin-bottom: 15px;">
+            <label>النوع:</label>
+            <input type="radio" name="gender" value="male"> ذكر
+            <input type="radio" name="gender" value="female"> أنثى
+        </div>
+        <div class="checkbox-group">
+            <label>هل تعاني من:</label>
+            <input type="checkbox"> اكتئاب
+            <input type="checkbox"> اضطراب أكل
+            <input type="checkbox"> الإثنين
+        </div>
+        <input type="password" placeholder="إنشاء كلمة مرور" required>
+        <button type="button" class="btn-primary" style="width: 100%;">إنشاء حساب</button>
+    </div>
+</div>
+
+</body>
+</html>

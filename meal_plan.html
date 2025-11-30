@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul Sync - خطة الأكل الصحي</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Tajawal", sans-serif;
+            background-color: #f0f0f5;
+        }
+
+        /* Header */
+        .header {
+            width: 100%;
+            background-color: #6C5CE7;
+            color: white;
+            padding: 15px 20px;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        .header h1 {
+            margin: 0;
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            margin-top: 70px; /* ارتفاع الهيدر */
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 200px;
+            background-color: #fff;
+            border-left: 1px solid #ddd;
+            padding: 15px 10px;
+            box-sizing: border-box;
+            position: fixed;
+            top: 70px; /* تحت الهيدر */
+            bottom: 0;
+            right: 0; /* لأن الصفحة RTL */
+            overflow-y: auto;
+        }
+        .sidebar a {
+            display: block;
+            padding: 10px 5px;
+            margin-bottom: 5px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .sidebar a.active {
+            background-color: #6C5CE7;
+            color: white;
+        }
+        .sidebar a:hover {
+            background-color: #A29BFE;
+            color: white;
+        }
+
+        /* Main content */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            margin-right: 200px; /* عرض الشريط الجانبي */
+            box-sizing: border-box;
+        }
+
+        /* Water tracker */
+        .water-tracker {
+            background-color: #BBDEFB;
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            padding: 10px 20px;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .btn-primary:disabled {
+            cursor: not-allowed;
+        }
+
+        /* Card */
+        .card {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Meal items */
+        .meal-item {
+            border: 1px solid #EEE;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Soul Sync</h1>
+</div>
+
+<div class="container">
+    <div class="main-content">
+        <h2>&#127860; خطة الأكل الصحي</h2>
+
+        <!-- متتبع شرب الماء -->
+        <div class="water-tracker">
+            <h3>&#128167; متتبع شرب الماء</h3>
+            <p id="waterCount" style="font-size: 24px;">4 أكواب من 8</p>
+            <button id="drinkButton" class="btn-primary" style="background-color: #29B6F6;">شربت كوب ✔</button>
+            <button id="resetButton" class="btn-primary" style="background-color: #F44336; margin-left:10px;">إعادة تعيين</button>
+        </div>
+
+        <!-- الوجبات المقترحة -->
+        <div class="card">
+            <h3>الوجبات المقترحة لهذا اليوم</h3>
+            <div class="meal-item"><strong>الإفطار:</strong> زبادي + فواكه / توست + بيضة.</div>
+            <div class="meal-item"><strong>الغداء:</strong> أرز + فراخ مشوية / بطاطا + تونة.</div>
+            <div class="meal-item"><strong>العشاء:</strong> زبادي + خيار / سلطة خفيفة.</div>
+            <div class="meal-item"><strong>سناك:</strong> تفاحة / مكسرات.</div>
+        </div>
+
+        <!-- قسم الرغبة الشديدة -->
+        <div class="card" style="text-align: center;">
+            <h3>شعرت برغبة شديدة (Craving)؟</h3>
+            <p>لا تستسلم، يمكننا تجاوزها معاً.</p>
+            <a href="exercises.html" class="btn-primary" style="background-color: #E53935;">ساعدني الآن</a>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <a href="home.html">الرئيسية</a>
+        <a href="checkin.html">التقييم اليومي</a>
+        <a href="ai_analysis.html">تحليل الذكاء الاصطناعي</a>
+        <a href="ai_chat.html">محادثة AI Coach</a> 
+        <a href="exercises.html">التمارين</a>
+        <a href="community.html">المجتمع</a>
+        <a href="routine.html">الجدول اليومي</a>
+        <a href="meal_plan.html" class="active">جدول الأكل الصحي</a>
+        <a href="workout.html">تمارين الجسم</a>
+        <a href="graphs.html">الرسوم البيانية</a>
+        <a href="profile.html">الحساب</a>
+        <a href="emergency.html" style="color: #E53935; font-weight: bold;">مساعدة الطوارئ</a>
+    </div>
+</div>
+
+<script>
+    const waterCount = document.getElementById('waterCount');
+    const drinkButton = document.getElementById('drinkButton');
+    const resetButton = document.getElementById('resetButton');
+    const maxCups = 8;
+
+    // قراءة عدد الأكواب المخزنة مسبقاً أو البداية من 4
+    let cupsDrunk = parseInt(localStorage.getItem('cupsDrunk')) || 4;
+
+    function updateDisplay() {
+        waterCount.textContent = `${cupsDrunk} أكواب من ${maxCups}`;
+        if (cupsDrunk >= maxCups) {
+            drinkButton.textContent = "لقد وصلت للحد الأقصى ✅";
+            drinkButton.disabled = true;
+            drinkButton.style.backgroundColor = "#4CAF50"; // أخضر
+        } else {
+            drinkButton.textContent = "شربت كوب ✔";
+            drinkButton.disabled = false;
+            drinkButton.style.backgroundColor = "#29B6F6";
+        }
+    }
+
+    // عرض العدد عند تحميل الصفحة
+    updateDisplay();
+
+    // زيادة كوب ماء
+    drinkButton.addEventListener('click', () => {
+        if (cupsDrunk < maxCups) {
+            cupsDrunk++;
+            localStorage.setItem('cupsDrunk', cupsDrunk);
+            updateDisplay();
+        }
+    });
+
+    // إعادة تعيين العدد
+    resetButton.addEventListener('click', () => {
+        cupsDrunk = 0;
+        localStorage.setItem('cupsDrunk', cupsDrunk);
+        updateDisplay();
+    });
+</script>
+
+</body>
+</html>
+    

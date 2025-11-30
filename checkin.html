@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul Sync - التقييم اليومي</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="header">
+    <a href="home.html" class="logo">Soul Sync</a>
+    <div>سجّل حالتك اليوم</div>
+</div>
+
+<div class="sidebar">
+    <a href="home.html" class="active">الرئيسية</a>
+    <a href="checkin.html">التقييم اليومي</a>
+    <a href="ai_analysis.html">تحليل الذكاء الاصطناعي</a>
+    <a href="ai_chat.html" >محادثة AI Coach</a> 
+    <a href="exercises.html">التمارين</a>
+    <a href="community.html">المجتمع</a>
+    <a href="routine.html">الجدول اليومي</a>
+    <a href="meal_plan.html">جدول الأكل الصحي</a>
+    <a href="workout.html">تمارين الجسم</a>
+    <a href="graphs.html">الرسوم البيانية</a>
+    <a href="profile.html">الحساب</a>
+    <a href="emergency.html" style="color: var(--danger-color); font-weight: bold;">مساعدة الطوارئ</a>
+</div>
+
+<div class="main-content">
+    <h2>&#128103; تقييمك اليومي السريع</h2>
+    <div class="card">
+        <!-- تم تغيير action ليتم التحكم به بالـ JavaScript -->
+        <form id="checkInForm">
+            
+            <label for="mood">1. مزاجك من 1 إلى 5: <span id="moodValue">3</span></label>
+            <input type="range" id="mood" name="mood" min="1" max="5" value="3" required style="width: 100%; margin-bottom: 20px;">
+            
+            <label for="energy">2. طاقتك من 1 إلى 5: <span id="energyValue">4</span></label>
+            <input type="range" id="energy" name="energy" min="1" max="5" value="4" required style="width: 100%; margin-bottom: 20px;">
+            
+            <label>3. شهيتك:</label>
+            <div style="margin-bottom: 20px;">
+                <input type="radio" name="appetite" value="low" required> قليلة
+                <input type="radio" name="appetite" value="medium" checked> متوسطة
+                <input type="radio" name="appetite" value="high"> زائدة
+            </div>
+
+            <label>4. نومك:</label>
+            <div style="margin-bottom: 20px;">
+                <input type="radio" name="sleep" value="good" checked> جيد
+                <input type="radio" name="sleep" value="average"> متوسط
+                <input type="radio" name="sleep" value="bad"> سيئ
+            </div>
+
+            <label>5. نوبة أكل حصلت؟</label>
+            <div style="margin-bottom: 20px;">
+                <input type="radio" name="binge" value="yes"> نعم
+                <input type="radio" name="binge" value="no" checked> لا
+            </div>
+
+            <label for="thoughts">6. أفكار سلبية؟ (اختياري)</label>
+            <textarea id="thoughts" name="thoughts" rows="4" placeholder="اكتب أفكارك إذا أردت..." style="width: 98%; padding: 10px; border: 1px solid #CCC; border-radius: 5px; margin-bottom: 20px;"></textarea>
+            
+            <button type="submit" class="btn-primary" style="width: 100%;">حفظ التقييم</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // تحديث قيم الـ sliders
+    const moodSlider = document.getElementById('mood');
+    const moodValueDisplay = document.getElementById('moodValue');
+    const energySlider = document.getElementById('energy');
+    const energyValueDisplay = document.getElementById('energyValue');
+
+    moodSlider.addEventListener('input', () => {
+        moodValueDisplay.textContent = moodSlider.value;
+    });
+
+    energySlider.addEventListener('input', () => {
+        energyValueDisplay.textContent = energySlider.value;
+    });
+
+
+    // وظيفة حفظ البيانات في LocalStorage
+    document.getElementById('checkInForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // منع الإرسال التقليدي
+
+        // 1. جمع بيانات النموذج
+        const formData = new FormData(event.target);
+        const data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+
+        // 2. إضافة بيانات التاريخ والوقت (كـ timestamp)
+        const now = new Date();
+        data['timestamp'] = now.toISOString();
+        data['dateKey'] = now.toDateString(); // لاستخدامه كمفتاح يومي بسيط إذا لزم الأمر
+
+        // 3. تحميل البيانات القديمة من localStorage
+        // نستخدم مفتاح ثابت لتخزين جميع سجلات المستخدم
+        const STORAGE_KEY = 'soulSyncCheckins';
+        let checkins = [];
+
+        try {
+            const storedData = localStorage.getItem(STORAGE_KEY);
+            if (storedData) {
+                checkins = JSON.parse(storedData);
+            }
+        } catch (e) {
+            console.error('Failed to parse localStorage data:', e);
+            // قد يحدث هذا إذا كان التخزين تالفاً
+        }
+
+        // 4. إضافة الإدخال الجديد
+        checkins.push(data);
+
+        // 5. حفظ البيانات المحدثة
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(checkins));
+            console.log('Daily check-in saved successfully:', data);
+        } catch (e) {
+            console.error('Failed to save to localStorage:', e);
+        }
+
+        // 6. التوجيه لصفحة التحليل
+        window.location.href = 'ai_analysis.html';
+    });
+
+    // ملاحظة هامة: يجب تحديث صفحة ai_analysis.html و graphs.html لقراءة البيانات من localStorage
+</script>
+
+</body>
+</html>

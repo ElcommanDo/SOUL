@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul Sync - الرسوم البيانية</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+</head>
+<body>
+
+
+<div class="header">
+    <a href="home.html" class="logo">Soul Sync</a>
+    <div>مرحباً، Admin User!</div>
+</div>
+
+<div class="sidebar">
+    <a href="home.html" class="active">الرئيسية</a>
+    <a href="checkin.html">التقييم اليومي</a>
+    <a href="ai_analysis.html">تحليل الذكاء الاصطناعي</a>
+    <a href="exercises.html">التمارين</a>
+    <a href="community.html">المجتمع</a>
+    <a href="routine.html">الجدول اليومي</a>
+    <a href="meal_plan.html">جدول الأكل الصحي</a>
+    <a href="workout.html">تمارين الجسم</a>
+    <a href="graphs.html">الرسوم البيانية</a>
+    <a href="profile.html">الحساب</a>
+    <a href="emergency.html" style="color: var(--danger-color); font-weight: bold;">مساعدة الطوارئ</a>
+</div>
+<div class="main-content">
+    <h2>&#128200; متابعة التقدم عبر الرسوم البيانية</h2>
+    
+    <div class="card">
+        <h3>1. المزاج الأسبوعي (1 = سيئ، 5 = ممتاز)</h3>
+        <canvas id="moodChart" height="100"></canvas>
+    </div>
+    
+    <div class="card">
+        <h3>2. نوبات الأكل المسجلة شهرياً</h3>
+        <canvas id="bingeChart" height="100"></canvas>
+    </div>
+    
+    <div class="card" style="max-width: 500px; margin: 0 auto 20px;">
+        <h3>3. توزيع الشهية خلال آخر 30 يوماً</h3>
+        <canvas id="appetiteChart"></canvas>
+    </div>
+</div>
+
+<script>
+    // ----------------------------------------------------------------
+    // 1. رسم بياني لتغير المزاج (Mood Chart) - خطي
+    // ----------------------------------------------------------------
+    const moodCtx = document.getElementById('moodChart').getContext('2d');
+    const moodChart = new Chart(moodCtx, {
+        type: 'line',
+        data: {
+            labels: ['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'],
+            datasets: [{
+                label: 'متوسط المزاج',
+                data: [3, 2, 4, 3, 5, 4, 4], // بيانات افتراضية
+                borderColor: 'var(--primary-color)',
+                backgroundColor: 'rgba(108, 92, 231, 0.2)',
+                tension: 0.3, // لجعل الخط منحني (موج)
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    min: 1,
+                    max: 5,
+                    title: { display: true, text: 'مستوى المزاج (1-5)' }
+                }
+            }
+        }
+    });
+
+    // ----------------------------------------------------------------
+    // 2. رسم بياني لنوبات الأكل (Binge Chart) - أعمدة
+    // ----------------------------------------------------------------
+    const bingeCtx = document.getElementById('bingeChart').getContext('2d');
+    const bingeChart = new Chart(bingeCtx, {
+        type: 'bar',
+        data: {
+            labels: ['الأسبوع 1', 'الأسبوع 2', 'الأسبوع 3', 'الأسبوع 4'],
+            datasets: [{
+                label: 'عدد نوبات الأكل',
+                data: [4, 2, 1, 0], // بيانات افتراضية (هبوط ممتاز)
+                backgroundColor: ['#D63031', '#FF7675', '#FAB1A0', 'var(--success-color)'],
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true } },
+            plugins: { legend: { display: false } }
+        }
+    });
+
+    // ----------------------------------------------------------------
+    // 3. توزيع الشهية (Appetite Chart) - دائري (Pie)
+    // ----------------------------------------------------------------
+    const appetiteCtx = document.getElementById('appetiteChart').getContext('2d');
+    const appetiteChart = new Chart(appetiteCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['شهية قليلة', 'شهية متوسطة', 'شهية زائدة'],
+            datasets: [{
+                data: [10, 50, 40], // 50% متوسطة، 40% زائدة، 10% قليلة
+                backgroundColor: ['#00CEC9', '#6C5CE7', '#FFEAA7'],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'right' }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
